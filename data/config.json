@@ -1,0 +1,18 @@
+{
+    "parkingLot": {
+        "name": "SmartParking 智能停车场",
+        "smallSpots": 60,
+        "largeSpots": 30,
+        "mcSpots": 10,
+        "reservationTimeout": 120
+    },
+    "rates": {
+        "car": 5.0,
+        "truck": 10.0,
+        "motorcycle": 2.5,
+        "carNight": 3.0
+    },
+    "zones": ["A", "B", "C"],
+    "rowsPerZone": 5,
+    "spotsPerRow": 10
+}

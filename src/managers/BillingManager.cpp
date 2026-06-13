@@ -1,0 +1,93 @@
+﻿#include "managers/BillingManager.h"
+#include <iostream>
+#include <iomanip>
+#include <chrono>
+#include <ctime>
+#include <sstream>
+
+BillingManager::BillingManager() {}
+
+double BillingManager::calculateFee(const Vehicle& vehicle) {
+    return vehicle.calculateFee();
+}
+
+BillRecord BillingManager::generateBill(const Vehicle& vehicle) {
+    BillRecord record;
+    record.plateNumber = vehicle.getPlate();
+    record.vehicleType = vehicle.getType();
+    record.duration = vehicle.calculateParkingDuration();
+    record.amount = calculateFee(vehicle);
+    
+    auto now = std::chrono::system_clock::now();
+    auto time = std::chrono::system_clock::to_time_t(now);
+    std::ostringstream oss;
+    oss << std::put_time(std::localtime(&time), "%Y-%m-%d %H:%M:%S");
+    record.exitTime = oss.str();
+    
+    return record;
+}
+
+void BillingManager::addHistory(const BillRecord& record) {
+    history.push_back(record);
+}
+
+void BillingManager::displayHistory() const {
+    std::cout << "\n========================================" << std::endl;
+    std::cout << "               账单历史                   " << std::endl;
+    std::cout << "==========================================" << std::endl;
+    
+    if (history.empty()) {
+        std::cout << "  无记录" << std::endl;
+    } else {
+        for (const auto& record : history) {
+            std::cout << "  车牌号: " << record.plateNumber << std::endl;
+            std::cout << "  类型: " << record.vehicleType << std::endl;
+            std::cout << "  停留时间: " << std::fixed << std::setprecision(1) 
+                      << record.duration << " hours" << std::endl;
+            std::cout << "  金额: $" << std::fixed << std::setprecision(2) 
+                      << record.amount << std::endl;
+            std::cout << "  退出时间: " << record.exitTime << std::endl;
+            std::cout << "  ----------------------------------------" << std::endl;
+        }
+    }
+    
+    std::cout << "========================================\n" << std::endl;
+}
+
+double BillingManager::getTotalRevenue() const {
+    double total = 0;
+    for (const auto& record : history) {
+        total += record.amount;
+    }
+    return total;
+}
+
+size_t BillingManager::getBillCount() const {
+    return history.size();
+}
+
+std::vector<BillRecordData> BillingManager::exportHistory() const {
+    std::vector<BillRecordData> records;
+    for (const auto& h : history) {
+        BillRecordData r;
+        r.plateNumber = h.plateNumber;
+        r.vehicleType = h.vehicleType;
+        r.duration = h.duration;
+        r.amount = h.amount;
+        r.exitTime = h.exitTime;
+        records.push_back(r);
+    }
+    return records;
+}
+
+void BillingManager::importHistory(const std::vector<BillRecordData>& records) {
+    for (const auto& r : records) {
+        BillRecord h;
+        h.plateNumber = r.plateNumber;
+        h.vehicleType = r.vehicleType;
+        h.duration = r.duration;
+        h.amount = r.amount;
+        h.exitTime = r.exitTime;
+        history.push_back(h);
+    }
+}
