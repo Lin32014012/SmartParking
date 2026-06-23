@@ -24,6 +24,7 @@ public:
 
     void updateSpots(const QVector<ParkingSpot*>& spots);
     void highlightSpot(const QString& code);
+    void clearHighlight();
 
 signals:
     void spotClicked(int spotId);

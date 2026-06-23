@@ -83,6 +83,11 @@ void ParkingLotWidget::highlightSpot(const QString& code) {
     }
 }
 
+void ParkingLotWidget::clearHighlight() {
+    highlightedSpotId = -1;
+    update();
+}
+
 void ParkingLotWidget::resizeEvent(QResizeEvent* event) {
     QWidget::resizeEvent(event);
     recalculateLayout();

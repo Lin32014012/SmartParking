@@ -162,6 +162,7 @@ void MainWindow::refreshStatus() {
 
 void MainWindow::onEntryClicked() {
     stackedWidget->setCurrentIndex(1);
+    parkingLotWidget->clearHighlight();
     entryBtn->setStyleSheet("QPushButton { background-color: #3498db; color: white; }");
     exitBtn->setStyleSheet("");
     queryBtn->setStyleSheet("");
@@ -171,6 +172,7 @@ void MainWindow::onEntryClicked() {
 
 void MainWindow::onExitClicked() {
     stackedWidget->setCurrentIndex(1);
+    parkingLotWidget->clearHighlight();
     entryBtn->setStyleSheet("");
     exitBtn->setStyleSheet("QPushButton { background-color: #e67e22; color: white; }");
     queryBtn->setStyleSheet("");
@@ -180,6 +182,7 @@ void MainWindow::onExitClicked() {
 
 void MainWindow::onQueryClicked() {
     stackedWidget->setCurrentIndex(1);
+    parkingLotWidget->clearHighlight();
     entryBtn->setStyleSheet("");
     exitBtn->setStyleSheet("");
     queryBtn->setStyleSheet("QPushButton { background-color: #3498db; color: white; }");
@@ -189,6 +192,7 @@ void MainWindow::onQueryClicked() {
 
 void MainWindow::onStatsClicked() {
     stackedWidget->setCurrentIndex(2);
+    parkingLotWidget->clearHighlight();
     statisticsPanel->refresh();
     entryBtn->setStyleSheet("");
     exitBtn->setStyleSheet("");
