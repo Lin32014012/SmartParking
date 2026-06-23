@@ -6,6 +6,7 @@
 
 #include <QApplication>
 #include <QMessageBox>
+#include <QInputDialog>
 #include <QSplitter>
 #include <QFrame>
 #include <QFont>
@@ -41,6 +42,8 @@ MainWindow::MainWindow(QWidget* parent)
     refreshTimer->start(5000);
 
     connect(vehiclePanel, &VehiclePanel::dataChanged, this, &MainWindow::refreshStatus);
+    connect(parkingLotWidget, &ParkingLotWidget::quickEntry, this, &MainWindow::onQuickEntry);
+    connect(parkingLotWidget, &ParkingLotWidget::quickExit, this, &MainWindow::onQuickExit);
 }
 
 MainWindow::~MainWindow() {
@@ -222,4 +225,81 @@ void MainWindow::saveData() {
     FileManager::saveSpots(DATA_FILE, parkingLot.exportSpots());
     FileManager::saveVehicles(DATA_FILE, vehicleManager.exportVehicles());
     FileManager::saveBillHistory(DATA_FILE, billingManager.exportHistory());
+}
+
+void MainWindow::onQuickEntry(const QString& spotCode) {
+    bool ok;
+    QString plate = QInputDialog::getText(this, "快捷进场",
+        "车位: " + spotCode + "\n请输入车牌号:", QLineEdit::Normal, "", &ok);
+
+    if (!ok || plate.trimmed().isEmpty()) return;
+    plate = plate.trimmed();
+
+    if (vehicleManager.findByPlate(plate.toStdString()) != nullptr) {
+        QMessageBox::warning(this, "错误", "该车辆已在停车场内");
+        return;
+    }
+
+    QStringList types = {"轿车", "卡车", "摩托车"};
+    QString type = QInputDialog::getItem(this, "选择车型", "车辆类型:", types, 0, false, &ok);
+    if (!ok) return;
+
+    std::unique_ptr<Vehicle> vehicle;
+    if (type == "轿车") vehicle = std::make_unique<Car>(plate.toStdString());
+    else if (type == "卡车") vehicle = std::make_unique<Truck>(plate.toStdString());
+    else vehicle = std::make_unique<Motorcycle>(plate.toStdString());
+
+    ParkingSpot* spot = spotManager.allocateSpot(*vehicle);
+    if (spot) {
+        spot->occupy(plate.toStdString());
+        vehicleManager.registerVehicle(std::move(vehicle));
+        QMessageBox::information(this, "成功",
+            QString("车辆入场成功！\n\n车牌号: %1\n车位: %2").arg(plate).arg(spotCode));
+        refreshStatus();
+        vehiclePanel->refreshTable();
+        saveData();
+    } else {
+        QMessageBox::warning(this, "失败", "车位分配失败");
+    }
+}
+
+void MainWindow::onQuickExit(const QString& spotCode, const QString& plate) {
+    Vehicle* vehicle = vehicleManager.findByPlate(plate.toStdString());
+    if (!vehicle) {
+        QMessageBox::warning(this, "错误", "未找到该车辆");
+        return;
+    }
+
+    BillRecord bill = billingManager.generateBill(*vehicle);
+
+    QMessageBox dialog(this);
+    dialog.setWindowTitle("快捷离场");
+    dialog.setIcon(QMessageBox::Information);
+    dialog.setText(QString(
+        "车位: %1\n"
+        "车牌号: %2\n"
+        "类型: %3\n"
+        "停车时长: %4 小时\n"
+        "费用: ¥%5")
+        .arg(spotCode)
+        .arg(QString::fromStdString(bill.plateNumber))
+        .arg(QString::fromStdString(bill.vehicleType))
+        .arg(bill.duration, 0, 'f', 1)
+        .arg(bill.amount, 0, 'f', 2));
+
+    QPushButton* payBtn = dialog.addButton("确认支付", QMessageBox::AcceptRole);
+    QPushButton* cancelBtn = dialog.addButton("取消", QMessageBox::RejectRole);
+    dialog.exec();
+
+    if (dialog.clickedButton() == payBtn) {
+        billingManager.addHistory(bill);
+        ParkingSpot* spot = spotManager.findSpotByPlate(plate.toStdString());
+        if (spot) spot->release();
+        vehicleManager.removeVehicle(plate.toStdString());
+
+        QMessageBox::information(this, "完成", "支付成功，车辆已离场");
+        refreshStatus();
+        vehiclePanel->refreshTable();
+        saveData();
+    }
 }

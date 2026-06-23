@@ -33,6 +33,8 @@ private slots:
     void onStatsClicked();
     void onSettingsClicked();
     void refreshStatus();
+    void onQuickEntry(const QString& spotCode);
+    void onQuickExit(const QString& spotCode, const QString& plate);
 
 private:
     void setupUI();

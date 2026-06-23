@@ -4,6 +4,7 @@
 #include <QPainter>
 #include <QVector>
 #include <QPoint>
+#include <QMenu>
 #include "core/ParkingSpot.h"
 
 struct SpotVisual {
@@ -25,6 +26,8 @@ public:
 
 signals:
     void spotClicked(int spotId);
+    void quickEntry(const QString& spotCode);
+    void quickExit(const QString& spotCode, const QString& plate);
 
 protected:
     void paintEvent(QPaintEvent* event) override;
@@ -33,7 +36,7 @@ protected:
 private:
     void drawSpot(QPainter& painter, const SpotVisual& spot);
     void drawLegend(QPainter& painter);
-    void recalculateLayout();
+    void showContextMenu(const QPoint& pos, const SpotVisual& spot);
 
     QVector<SpotVisual> spotVisuals;
     int highlightedSpotId;

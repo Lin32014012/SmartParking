@@ -1,5 +1,6 @@
 #include "ParkingLotWidget.h"
 #include <QMouseEvent>
+#include <QMenu>
 
 ParkingLotWidget::ParkingLotWidget(QWidget* parent)
     : QWidget(parent)
@@ -15,6 +16,7 @@ ParkingLotWidget::ParkingLotWidget(QWidget* parent)
 {
     setMinimumSize(400, 300);
     setMouseTracking(true);
+    setContextMenuPolicy(Qt::CustomContextMenu);
 }
 
 void ParkingLotWidget::updateSpots(const QVector<ParkingSpot*>& spots) {
@@ -68,7 +70,7 @@ void ParkingLotWidget::paintEvent(QPaintEvent* event) {
     titleFont.setPointSize(14);
     titleFont.setBold(true);
     painter.setFont(titleFont);
-    painter.drawText(QRect(margin, 8, width() - 2 * margin, 30), Qt::AlignCenter, "停车场平面图");
+    painter.drawText(QRect(margin, 8, width() - 2 * margin, 30), Qt::AlignCenter, "停车场平面图  (右键可快捷操作)");
 
     for (const auto& sv : spotVisuals) {
         drawSpot(painter, sv);
@@ -147,16 +149,43 @@ void ParkingLotWidget::drawLegend(QPainter& painter) {
 
 void ParkingLotWidget::mousePressEvent(QMouseEvent* event) {
     QPoint pos = event->pos();
+
     for (const auto& sv : spotVisuals) {
         if (sv.rect.contains(pos)) {
-            emit spotClicked(sv.spotId);
-            highlightedSpotId = sv.spotId;
-            update();
+            if (event->button() == Qt::RightButton) {
+                showContextMenu(event->globalPosition().toPoint(), sv);
+            } else {
+                emit spotClicked(sv.spotId);
+                highlightedSpotId = sv.spotId;
+                update();
+            }
             return;
         }
     }
 }
 
-void ParkingLotWidget::recalculateLayout() {
-    update();
+void ParkingLotWidget::showContextMenu(const QPoint& pos, const SpotVisual& spot) {
+    QMenu menu(this);
+    menu.setStyleSheet(
+        "QMenu { background: white; border: 1px solid #ddd; padding: 4px; }"
+        "QMenu::item { padding: 6px 20px; }"
+        "QMenu::item:selected { background: #3498db; color: white; }"
+    );
+
+    if (spot.status == SpotStatus::Empty) {
+        QAction* entryAction = menu.addAction("🚗  快捷进场");
+        connect(entryAction, &QAction::triggered, this, [this, spot]() {
+            emit quickEntry(spot.code);
+        });
+    } else if (spot.status == SpotStatus::Occupied) {
+        QAction* exitAction = menu.addAction("🚙  快捷离场");
+        connect(exitAction, &QAction::triggered, this, [this, spot]() {
+            emit quickExit(spot.code, spot.plate);
+        });
+    } else {
+        QAction* infoAction = menu.addAction("⏳  预留中...");
+        infoAction->setEnabled(false);
+    }
+
+    menu.exec(pos);
 }

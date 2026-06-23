@@ -1,0 +1,42 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/SmartParkingQt_autogen.dir/AutogenUsed.txt"
+  "CMakeFiles/SmartParkingQt_autogen.dir/ParseCache.txt"
+  "SmartParkingQt_autogen"
+  "CMakeFiles/SmartParkingQt.dir/SmartParkingQt_autogen/mocs_compilation.cpp.obj"
+  "CMakeFiles/SmartParkingQt.dir/SmartParkingQt_autogen/mocs_compilation.cpp.obj.d"
+  "CMakeFiles/SmartParkingQt.dir/main_qt.cpp.obj"
+  "CMakeFiles/SmartParkingQt.dir/main_qt.cpp.obj.d"
+  "CMakeFiles/SmartParkingQt.dir/src/core/ParkingLot.cpp.obj"
+  "CMakeFiles/SmartParkingQt.dir/src/core/ParkingLot.cpp.obj.d"
+  "CMakeFiles/SmartParkingQt.dir/src/core/ParkingSpot.cpp.obj"
+  "CMakeFiles/SmartParkingQt.dir/src/core/ParkingSpot.cpp.obj.d"
+  "CMakeFiles/SmartParkingQt.dir/src/core/Vehicle.cpp.obj"
+  "CMakeFiles/SmartParkingQt.dir/src/core/Vehicle.cpp.obj.d"
+  "CMakeFiles/SmartParkingQt.dir/src/managers/BillingManager.cpp.obj"
+  "CMakeFiles/SmartParkingQt.dir/src/managers/BillingManager.cpp.obj.d"
+  "CMakeFiles/SmartParkingQt.dir/src/managers/SpotManager.cpp.obj"
+  "CMakeFiles/SmartParkingQt.dir/src/managers/SpotManager.cpp.obj.d"
+  "CMakeFiles/SmartParkingQt.dir/src/managers/VehicleManager.cpp.obj"
+  "CMakeFiles/SmartParkingQt.dir/src/managers/VehicleManager.cpp.obj.d"
+  "CMakeFiles/SmartParkingQt.dir/src/utils/FileManager.cpp.obj"
+  "CMakeFiles/SmartParkingQt.dir/src/utils/FileManager.cpp.obj.d"
+  "CMakeFiles/SmartParkingQt.dir/ui/MainWindow.cpp.obj"
+  "CMakeFiles/SmartParkingQt.dir/ui/MainWindow.cpp.obj.d"
+  "CMakeFiles/SmartParkingQt.dir/ui/ParkingLotWidget.cpp.obj"
+  "CMakeFiles/SmartParkingQt.dir/ui/ParkingLotWidget.cpp.obj.d"
+  "CMakeFiles/SmartParkingQt.dir/ui/StatisticsPanel.cpp.obj"
+  "CMakeFiles/SmartParkingQt.dir/ui/StatisticsPanel.cpp.obj.d"
+  "CMakeFiles/SmartParkingQt.dir/ui/VehiclePanel.cpp.obj"
+  "CMakeFiles/SmartParkingQt.dir/ui/VehiclePanel.cpp.obj.d"
+  "SmartParkingQt.exe"
+  "SmartParkingQt.exe.manifest"
+  "SmartParkingQt.pdb"
+  "SmartParkingQt_autogen/mocs_compilation.cpp"
+  "SmartParkingQt_autogen/timestamp"
+  "libSmartParkingQt.dll.a"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang CXX)
+  include(CMakeFiles/SmartParkingQt.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

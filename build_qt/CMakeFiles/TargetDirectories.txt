@@ -1,0 +1,5 @@
+C:/Users/35199/Desktop/我的项目/智能停车管理系统2.0/智能停车管理系统/SmartParking/build_qt/CMakeFiles/SmartParkingQt.dir
+C:/Users/35199/Desktop/我的项目/智能停车管理系统2.0/智能停车管理系统/SmartParking/build_qt/CMakeFiles/edit_cache.dir
+C:/Users/35199/Desktop/我的项目/智能停车管理系统2.0/智能停车管理系统/SmartParking/build_qt/CMakeFiles/rebuild_cache.dir
+C:/Users/35199/Desktop/我的项目/智能停车管理系统2.0/智能停车管理系统/SmartParking/build_qt/CMakeFiles/SmartParkingQt_autogen_timestamp_deps.dir
+C:/Users/35199/Desktop/我的项目/智能停车管理系统2.0/智能停车管理系统/SmartParking/build_qt/CMakeFiles/SmartParkingQt_autogen.dir
