@@ -13,6 +13,7 @@ struct SpotVisual {
     QRect rect;
     SpotStatus status;
     QString plate;
+    QString zone;
 };
 
 class ParkingLotWidget : public QWidget {
@@ -32,21 +33,26 @@ signals:
 protected:
     void paintEvent(QPaintEvent* event) override;
     void mousePressEvent(QMouseEvent* event) override;
+    void resizeEvent(QResizeEvent* event) override;
 
 private:
     void drawSpot(QPainter& painter, const SpotVisual& spot);
     void drawLegend(QPainter& painter);
+    void drawZoneLabel(QPainter& painter, const QString& zone, int y);
     void showContextMenu(const QPoint& pos, const SpotVisual& spot);
+    void recalculateLayout();
 
     QVector<SpotVisual> spotVisuals;
     int highlightedSpotId;
-    int columns;
     int cellSize;
+    int gap;
     int margin;
+    int titleHeight;
     int legendHeight;
 
     QColor emptyColor;
     QColor reservedColor;
     QColor occupiedColor;
     QColor highlightColor;
+    QColor zoneColors[3];
 };
