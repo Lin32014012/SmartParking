@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     spotManager.initializeSpots(60, 30, 10);
     loadData();
+    vehiclePanel->refreshTable();
 
     setupUI();
     setupSidebar();

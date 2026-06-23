@@ -20,6 +20,7 @@ class VehiclePanel : public QWidget {
 public:
     VehiclePanel(ParkingLot& lot, VehicleManager& vm, SpotManager& sm, 
                  BillingManager& bm, QWidget* parent = nullptr);
+    void refreshTable();
 
 signals:
     void dataChanged();
@@ -28,7 +29,6 @@ private slots:
     void onEntry();
     void onExit();
     void onSearch();
-    void refreshTable();
 
 private:
     void setupUI();
