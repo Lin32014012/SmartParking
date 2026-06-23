@@ -1,9 +1,13 @@
 build/
 build_qt/
+.vs/
 *.exe
 *.obj
 *.o
 *.out
+*.ipch
+*.db
+*.suo
 CMakeCache.txt
 CMakeFiles/
 Makefile
