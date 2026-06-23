@@ -94,6 +94,12 @@ void ParkingLotWidget::resizeEvent(QResizeEvent* event) {
     recalculateLayout();
 }
 
+void ParkingLotWidget::showEvent(QShowEvent* event) {
+    QWidget::showEvent(event);
+    highlightedSpotId = -1;
+    update();
+}
+
 void ParkingLotWidget::paintEvent(QPaintEvent* event) {
     Q_UNUSED(event);
     QPainter painter(this);
