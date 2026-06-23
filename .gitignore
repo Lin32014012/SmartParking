@@ -1,28 +1,11 @@
-# Build directories
-out/
 build/
-cmake-build-*/
-
-# Visual Studio
-.vs/
-*.slnx
-*.vcxproj
-*.vcxproj.filters
-*.vcxproj.user
-
-# Compiled files
+build_qt/
 *.exe
 *.obj
-*.pdb
-*.ilk
-*.log
-
-# IDE files
-.idea/
-.vscode/
-*.swp
-*.swo
-
-# OS files
-.DS_Store
-Thumbs.db
+*.o
+*.out
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+.autogen/

@@ -88,12 +88,14 @@ void MainWindow::setupSidebar() {
     entryBtn = new QPushButton("🚗  车辆入场");
     exitBtn = new QPushButton("🚙  车辆离场");
     queryBtn = new QPushButton("🔍  车辆查询");
+    QPushButton* mapBtn = new QPushButton("🗺️  车位平面图");
     statsBtn = new QPushButton("📊  数据统计");
     settingsBtn = new QPushButton("⚙️  系统设置");
 
     layout->addWidget(entryBtn);
     layout->addWidget(exitBtn);
     layout->addWidget(queryBtn);
+    layout->addWidget(mapBtn);
     layout->addWidget(statsBtn);
     layout->addWidget(settingsBtn);
     layout->addStretch();
@@ -120,6 +122,15 @@ void MainWindow::setupSidebar() {
     connect(entryBtn, &QPushButton::clicked, this, &MainWindow::onEntryClicked);
     connect(exitBtn, &QPushButton::clicked, this, &MainWindow::onExitClicked);
     connect(queryBtn, &QPushButton::clicked, this, &MainWindow::onQueryClicked);
+    connect(mapBtn, &QPushButton::clicked, this, [this, mapBtn]() {
+        stackedWidget->setCurrentIndex(0);
+        entryBtn->setStyleSheet("");
+        exitBtn->setStyleSheet("");
+        queryBtn->setStyleSheet("");
+        mapBtn->setStyleSheet("QPushButton { background-color: #3498db; color: white; }");
+        statsBtn->setStyleSheet("");
+        settingsBtn->setStyleSheet("");
+    });
     connect(statsBtn, &QPushButton::clicked, this, &MainWindow::onStatsClicked);
     connect(settingsBtn, &QPushButton::clicked, this, &MainWindow::onSettingsClicked);
 }
