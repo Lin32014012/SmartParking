@@ -11,7 +11,7 @@ set(CMAKE_PREFIX_PATH "C:/Qt/6.11.1/mingw_64")
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 
-include_directories(include ui)
+include_directories(include)
 
 set(CORE_SOURCES
     src/core/Vehicle.cpp
