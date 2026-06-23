@@ -123,6 +123,7 @@ void MainWindow::setupSidebar() {
     connect(exitBtn, &QPushButton::clicked, this, &MainWindow::onExitClicked);
     connect(queryBtn, &QPushButton::clicked, this, &MainWindow::onQueryClicked);
     connect(mapBtn, &QPushButton::clicked, this, [this, mapBtn]() {
+        parkingLotWidget->clearHighlight();
         stackedWidget->setCurrentIndex(0);
         entryBtn->setStyleSheet("");
         exitBtn->setStyleSheet("");
