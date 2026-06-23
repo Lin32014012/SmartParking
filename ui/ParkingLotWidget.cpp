@@ -36,6 +36,7 @@ void ParkingLotWidget::updateSpots(const QVector<ParkingSpot*>& spots) {
         sv.zone = QString::fromStdString(spot->getZone());
         spotVisuals.append(sv);
     }
+    highlightedSpotId = -1;
     recalculateLayout();
 }
 
@@ -85,7 +86,7 @@ void ParkingLotWidget::highlightSpot(const QString& code) {
 
 void ParkingLotWidget::clearHighlight() {
     highlightedSpotId = -1;
-    update();
+    repaint();
 }
 
 void ParkingLotWidget::resizeEvent(QResizeEvent* event) {
