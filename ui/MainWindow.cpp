@@ -175,7 +175,7 @@ void MainWindow::onExitClicked() {
     stackedWidget->setCurrentIndex(1);
     parkingLotWidget->clearHighlight();
     entryBtn->setStyleSheet("");
-    exitBtn->setStyleSheet("QPushButton { background-color: #e67e22; color: white; }");
+    exitBtn->setStyleSheet("QPushButton { background-color: #3498db; color: white; }");
     queryBtn->setStyleSheet("");
     statsBtn->setStyleSheet("");
     settingsBtn->setStyleSheet("");
