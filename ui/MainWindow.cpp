@@ -88,7 +88,7 @@ void MainWindow::setupSidebar() {
     entryBtn = new QPushButton("🚗  车辆入场");
     exitBtn = new QPushButton("🚙  车辆离场");
     queryBtn = new QPushButton("🔍  车辆查询");
-    QPushButton* mapBtn = new QPushButton("🗺️  车位平面图");
+    mapBtn = new QPushButton("🗺️  车位平面图");
     statsBtn = new QPushButton("📊  数据统计");
     settingsBtn = new QPushButton("⚙️  系统设置");
 
@@ -122,7 +122,7 @@ void MainWindow::setupSidebar() {
     connect(entryBtn, &QPushButton::clicked, this, &MainWindow::onEntryClicked);
     connect(exitBtn, &QPushButton::clicked, this, &MainWindow::onExitClicked);
     connect(queryBtn, &QPushButton::clicked, this, &MainWindow::onQueryClicked);
-    connect(mapBtn, &QPushButton::clicked, this, [this, mapBtn]() {
+    connect(mapBtn, &QPushButton::clicked, this, [this]() {
         parkingLotWidget->clearHighlight();
         stackedWidget->setCurrentIndex(0);
         entryBtn->setStyleSheet("");
@@ -167,6 +167,7 @@ void MainWindow::onEntryClicked() {
     entryBtn->setStyleSheet("QPushButton { background-color: #3498db; color: white; }");
     exitBtn->setStyleSheet("");
     queryBtn->setStyleSheet("");
+    mapBtn->setStyleSheet("");
     statsBtn->setStyleSheet("");
     settingsBtn->setStyleSheet("");
 }
@@ -177,6 +178,7 @@ void MainWindow::onExitClicked() {
     entryBtn->setStyleSheet("");
     exitBtn->setStyleSheet("QPushButton { background-color: #3498db; color: white; }");
     queryBtn->setStyleSheet("");
+    mapBtn->setStyleSheet("");
     statsBtn->setStyleSheet("");
     settingsBtn->setStyleSheet("");
 }
@@ -187,6 +189,7 @@ void MainWindow::onQueryClicked() {
     entryBtn->setStyleSheet("");
     exitBtn->setStyleSheet("");
     queryBtn->setStyleSheet("QPushButton { background-color: #3498db; color: white; }");
+    mapBtn->setStyleSheet("");
     statsBtn->setStyleSheet("");
     settingsBtn->setStyleSheet("");
 }
@@ -198,6 +201,7 @@ void MainWindow::onStatsClicked() {
     entryBtn->setStyleSheet("");
     exitBtn->setStyleSheet("");
     queryBtn->setStyleSheet("");
+    mapBtn->setStyleSheet("");
     statsBtn->setStyleSheet("QPushButton { background-color: #3498db; color: white; }");
     settingsBtn->setStyleSheet("");
 }

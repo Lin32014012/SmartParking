@@ -61,6 +61,7 @@ private:
     QPushButton* entryBtn;
     QPushButton* exitBtn;
     QPushButton* queryBtn;
+    QPushButton* mapBtn;
     QPushButton* statsBtn;
     QPushButton* settingsBtn;
 };
