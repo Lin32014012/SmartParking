@@ -61,28 +61,28 @@ int main() {
 
     int failures = 0;
     if (duplicate) {
-        std::cout << "  [FAIL] 同一车位被重复分配\n";
+        std::cout << "  [FAIL] same spot allocated more than once\n";
         ++failures;
     }
     if (success != CAPACITY) {
-        std::cout << "  [FAIL] 成功分配数 " << success
-                  << " != 容量 " << CAPACITY << "\n";
+        std::cout << "  [FAIL] success count " << success
+                  << " != capacity " << CAPACITY << "\n";
         ++failures;
     }
     if (occupied != CAPACITY) {
-        std::cout << "  [FAIL] 占用数 " << occupied
-                  << " != 容量 " << CAPACITY << "\n";
+        std::cout << "  [FAIL] occupied " << occupied
+                  << " != capacity " << CAPACITY << "\n";
         ++failures;
     }
     if (static_cast<int>(usedSpots.size()) != success) {
-        std::cout << "  [FAIL] 去重后车位数 " << usedSpots.size()
-                  << " != 成功数 " << success << "\n";
+        std::cout << "  [FAIL] unique spots " << usedSpots.size()
+                  << " != success " << success << "\n";
         ++failures;
     }
 
     if (failures == 0) {
-        std::cout << "[concurrency] ALL PASS: " << THREADS
-                  << " 线程并发下无重复分配，资源分配原子且安全\n";
+        std::cout << "[concurrency] ALL PASS: no double-allocation under "
+                  << THREADS << " threads (allocation is atomic & thread-safe)\n";
         return 0;
     }
     return 1;
