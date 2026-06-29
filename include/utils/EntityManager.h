@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include <memory>
 #include <string>
 #include <algorithm>
@@ -10,7 +10,8 @@
 template<typename T>
 class EntityManager {
     std::vector<std::unique_ptr<T>> entities;
-    std::map<std::string, T*> indexByPlate;
+    // 哈希表索引：车牌 -> 实体指针，提供平均 O(1) 的按车牌查找
+    std::unordered_map<std::string, T*> indexByPlate;
     
 public:
     EntityManager() = default;

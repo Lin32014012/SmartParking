@@ -9,7 +9,7 @@ bool FileManager::fileExists(const std::string& filename) {
 }
 
 bool FileManager::saveSpots(const std::string& filename, const std::vector<SpotRecord>& spots) {
-    std::ofstream file(filename);
+    std::ofstream file(filename, std::ios::trunc);
     if (!file.is_open()) {
         return false;
     }

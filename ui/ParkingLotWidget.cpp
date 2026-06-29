@@ -116,25 +116,12 @@ void ParkingLotWidget::paintEvent(QPaintEvent* event) {
         Qt::AlignCenter, "停车场平面图  (右键快捷操作)");
 
     QString lastZone;
-    int zoneIdx = 0;
-    int lastY = 0;
 
     for (const auto& sv : spotVisuals) {
         if (sv.zone != lastZone) {
-            if (!lastZone.isEmpty()) {
-                lastY = sv.rect.y() - 24;
-            }
             lastZone = sv.zone;
-            zoneIdx = (sv.zone == "A") ? 0 : (sv.zone == "B") ? 1 : 2;
         }
         drawSpot(painter, sv);
-        lastY = sv.rect.y() + cellSize;
-    }
-
-    for (const auto& sv : spotVisuals) {
-        if (sv.zone != lastZone || &sv == &spotVisuals.first()) {
-            // Draw zone label once
-        }
     }
 
     drawLegend(painter);
@@ -209,15 +196,6 @@ void ParkingLotWidget::drawLegend(QPainter& painter) {
     painter.drawRoundedRect(legendX, legendY, 14, 14, 3, 3);
     painter.setPen(QColor(44, 62, 80));
     painter.drawText(legendX + 18, legendY + 12, "占用");
-}
-
-void ParkingLotWidget::drawZoneLabel(QPainter& painter, const QString& zone, int y) {
-    painter.setPen(QColor(44, 62, 80));
-    QFont labelFont = painter.font();
-    labelFont.setPointSize(10);
-    labelFont.setBold(true);
-    painter.setFont(labelFont);
-    painter.drawText(QRect(margin, y, 200, 20), Qt::AlignLeft, "区域 " + zone);
 }
 
 void ParkingLotWidget::mousePressEvent(QMouseEvent* event) {

@@ -1,4 +1,4 @@
-﻿#include "core/ParkingSpot.h"
+#include "core/ParkingSpot.h"
 #include "core/Vehicle.h"
 #include <sstream>// 用于字符串流拼接 SpotCode
 #include <iomanip>// 用于 setw、setfill 格式化
@@ -72,6 +72,14 @@ int ParkingSpot::getSpotId() const {//车位id
 
 std::string ParkingSpot::getZone() const {//车位区域
     return zone;
+}
+
+int ParkingSpot::getRow() const {
+    return row;
+}
+
+int ParkingSpot::getPosition() const {
+    return position;
 }
 
 SpotStatus ParkingSpot::getStatus() const {//车位状态

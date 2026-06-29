@@ -5,12 +5,21 @@
 #include "utils/FileManager.h"
 
 #include <QApplication>
+#include <QCoreApplication>
 #include <QMessageBox>
 #include <QInputDialog>
 #include <QSplitter>
 #include <QFrame>
 #include <QFont>
 #include <QScrollArea>
+
+namespace {
+    // 数据文件固定存放在可执行文件同级目录，避免因启动方式不同（IDE 调试 vs 双击）
+    // 导致工作目录变化、数据文件"找不到"的问题。
+    std::string dataFilePath() {
+        return (QCoreApplication::applicationDirPath() + "/parking_data.txt").toStdString();
+    }
+}
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -19,7 +28,7 @@ MainWindow::MainWindow(QWidget* parent)
     , stackedWidget(new QStackedWidget)
     , parkingLotWidget(new ParkingLotWidget)
     , vehiclePanel(new VehiclePanel(parkingLot, vehicleManager, spotManager, billingManager))
-    , statisticsPanel(new StatisticsPanel(spotManager, billingManager))
+    , statisticsPanel(new StatisticsPanel(spotManager, billingManager, vehicleManager))
     , statusLabel(new QLabel)
     , occupiedLabel(new QLabel)
     , availableLabel(new QLabel)
@@ -217,7 +226,7 @@ void MainWindow::onSettingsClicked() {
 }
 
 void MainWindow::loadData() {
-    static const std::string DATA_FILE = "parking_data.txt";
+    const std::string DATA_FILE = dataFilePath();
     if (!FileManager::fileExists(DATA_FILE)) return;
 
     auto spotRecords = FileManager::loadSpots(DATA_FILE);
@@ -241,7 +250,7 @@ void MainWindow::loadData() {
 }
 
 void MainWindow::saveData() {
-    static const std::string DATA_FILE = "parking_data.txt";
+    const std::string DATA_FILE = dataFilePath();
     FileManager::saveSpots(DATA_FILE, parkingLot.exportSpots());
     FileManager::saveVehicles(DATA_FILE, vehicleManager.exportVehicles());
     FileManager::saveBillHistory(DATA_FILE, billingManager.exportHistory());
@@ -308,7 +317,7 @@ void MainWindow::onQuickExit(const QString& spotCode, const QString& plate) {
         .arg(bill.amount, 0, 'f', 2));
 
     QPushButton* payBtn = dialog.addButton("确认支付", QMessageBox::AcceptRole);
-    QPushButton* cancelBtn = dialog.addButton("取消", QMessageBox::RejectRole);
+    dialog.addButton("取消", QMessageBox::RejectRole);
     dialog.exec();
 
     if (dialog.clickedButton() == payBtn) {

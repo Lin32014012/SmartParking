@@ -1,4 +1,4 @@
-﻿#include "core/ParkingLot.h"
+#include "core/ParkingLot.h"
 #include "core/Vehicle.h"
 #include <iostream>
 #include <algorithm>
@@ -9,29 +9,22 @@ void ParkingLot::initializeSpots(int smallCount, int largeCount, int mcCount) {/
     spots.clear();// 清空旧数据
     int id = 1;// 车位 ID 从 1 开始
     
-    std::string zones[] = {"A", "B", "C"};// 三个区域
-    int zoneIndex = 0;// 区域索引
+    for (int i = 0; i < smallCount; i++) {
+        int row = (i / 10) + 1;
+        int pos = (i % 10) + 1;
+        spots.push_back(std::make_unique<SmallSpot>(id++, "A", row, pos));
+    }
 
-    
-    for (int i = 0; i < smallCount; i++) {//小型车位
-        std::string zone = zones[zoneIndex % 3];// 永远是 zones[0] = "A"
-        int row = (i / 10) + 1;// 每10个车位一排
-        int pos = (i % 10) + 1;// 排内位置
-        spots.push_back(std::make_unique<SmallSpot>(id++, zone, row, pos));
-    }
-    
-    for (int i = 0; i < largeCount; i++) {//大型车位
-        std::string zone = zones[zoneIndex % 3];
+    for (int i = 0; i < largeCount; i++) {
         int row = (i / 5) + 1;
         int pos = (i % 5) + 1;
-        spots.push_back(std::make_unique<LargeSpot>(id++, zone, row, pos));
+        spots.push_back(std::make_unique<LargeSpot>(id++, "B", row, pos));
     }
-    
-    for (int i = 0; i < mcCount; i++) {//摩托车位
-        std::string zone = zones[zoneIndex % 3];
+
+    for (int i = 0; i < mcCount; i++) {
         int row = (i / 5) + 1;
         int pos = (i % 5) + 1;
-        spots.push_back(std::make_unique<MCSpot>(id++, zone, row, pos));
+        spots.push_back(std::make_unique<MCSpot>(id++, "C", row, pos));
     }
     
     totalSpots = spots.size();
@@ -46,7 +39,8 @@ ParkingSpot* ParkingLot::findAvailableSpot(const Vehicle& vehicle) {//查找空�
     return nullptr;// 没找到
 }
 
-ParkingSpot* ParkingLot::allocateSpot(const Vehicle& vehicle) {//分配车位
+ParkingSpot* ParkingLot::allocateSpot(const Vehicle& vehicle) {//分配车位（仅预留）
+    std::lock_guard<std::mutex> lock(allocMutex);// 查找空位+预留为原子操作
     ParkingSpot* spot = findAvailableSpot(vehicle);
     if (spot) {
         spot->reserve(vehicle.getPlate());// 设为 Reserved 状态
@@ -55,7 +49,19 @@ ParkingSpot* ParkingLot::allocateSpot(const Vehicle& vehicle) {//分配车位
     return nullptr;
 }
 
+ParkingSpot* ParkingLot::parkVehicle(const Vehicle& vehicle) {//线程安全：查找+预留+占用一气呵成
+    std::lock_guard<std::mutex> lock(allocMutex);
+    ParkingSpot* spot = findAvailableSpot(vehicle);
+    if (spot) {
+        spot->reserve(vehicle.getPlate());
+        spot->occupy(vehicle.getPlate());// 在同一把锁内完成占用，避免并发读写 status 的竞争
+        return spot;
+    }
+    return nullptr;
+}
+
 bool ParkingLot::releaseSpot(int spotId) {//释放车位
+    std::lock_guard<std::mutex> lock(allocMutex);
     for (auto& spot : spots) {
         if (spot->getSpotId() == spotId) {
             spot->release();// Occupied/Reserved → Empty
@@ -142,8 +148,8 @@ std::vector<SpotRecord> ParkingLot::exportSpots() const {// 导出车位数据
         r.spotId = spot->getSpotId();
         r.zone = spot->getZone();
         r.spotType = spot->getSpotType();
-        r.row = 0;// 简化：未保存 row
-        r.position = 0;// 简化：未保存 position
+        r.row = spot->getRow();
+        r.position = spot->getPosition();
 
         switch (spot->getStatus()) {
             case SpotStatus::Empty: r.status = "空"; break;

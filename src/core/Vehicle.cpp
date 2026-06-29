@@ -1,5 +1,4 @@
-﻿#include "core/Vehicle.h"
-#include "core/ParkingSpot.h"
+#include "core/Vehicle.h"
 
 Vehicle::Vehicle(const std::string& plate)
 : plateNumber(plate), entryTime(std::chrono::system_clock::now()) {}//构造函数 获取当前系统时间作为入场时间
@@ -37,10 +36,6 @@ std::string Car::getType() const {
     return "轿车";
 }
 
-bool Car::canFitInSpot(const ParkingSpot& spot) const {
-    return spot.getSpotType() == "小车位";
-}
-
 Truck::Truck(const std::string& plate) : Vehicle(plate) {}//卡车构造函数
 
 double Truck::getHourlyRate() const {
@@ -51,10 +46,6 @@ std::string Truck::getType() const {
     return "卡车";
 }
 
-bool Truck::canFitInSpot(const ParkingSpot& spot) const {
-    return spot.getSpotType() == "大车位";
-}
-
 Motorcycle::Motorcycle(const std::string& plate) : Vehicle(plate) {}//摩托车构造函数
 
 double Motorcycle::getHourlyRate() const {
@@ -63,8 +54,4 @@ double Motorcycle::getHourlyRate() const {
 
 std::string Motorcycle::getType() const {
     return "摩托车";
-}
-
-bool Motorcycle::canFitInSpot(const ParkingSpot& spot) const {
-    return spot.getSpotType() == "摩托车车位";
 }

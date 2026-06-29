@@ -1,12 +1,15 @@
 #include "StatisticsPanel.h"
+#include "utils/Statistics.h"
 #include <QHeaderView>
 #include <QGridLayout>
 #include <QFrame>
 
-StatisticsPanel::StatisticsPanel(SpotManager& sm, BillingManager& bm, QWidget* parent)
+StatisticsPanel::StatisticsPanel(SpotManager& sm, BillingManager& bm, VehicleManager& vm,
+                                 QWidget* parent)
     : QWidget(parent)
     , spotManager(sm)
     , billingManager(bm)
+    , vehicleManager(vm)
 {
     setupUI();
 }
@@ -66,6 +69,13 @@ void StatisticsPanel::setupUI() {
     revenueLabel = revenueCard->findChild<QLabel*>("valueLabel");
     billCountLabel = billCard->findChild<QLabel*>("valueLabel");
 
+    typeDistLabel = new QLabel("在场车型分布: （当前无在场车辆）");
+    typeDistLabel->setStyleSheet(
+        "background: white; border-radius: 8px; border-left: 4px solid #16a085; "
+        "color: #2c3e50; font-size: 13px; padding: 12px;");
+    typeDistLabel->setWordWrap(true);
+    mainLayout->addWidget(typeDistLabel);
+
     QLabel* historyTitle = new QLabel("计费历史");
     historyTitle->setStyleSheet("font-size: 16px; font-weight: bold; color: #2c3e50; padding: 8px 0 0 0;");
     mainLayout->addWidget(historyTitle);
@@ -84,7 +94,31 @@ void StatisticsPanel::setupUI() {
 
 void StatisticsPanel::refresh() {
     updateOverview();
+    updateTypeDistribution();
     updateBillHistory();
+}
+
+void StatisticsPanel::updateTypeDistribution() {
+    // 用通用统计模板按车型聚合在场车辆的数量与应收费用
+    StatisticsCollector<std::string, double> feeByType;
+    vehicleManager.forEachVehicle([&](const Vehicle& v) {
+        feeByType.addData(v.getType(), billingManager.calculateFee(v));
+    });
+
+    auto categories = feeByType.getCategories();
+    if (categories.empty()) {
+        typeDistLabel->setText("在场车型分布: （当前无在场车辆）");
+        return;
+    }
+
+    QString text = "在场车型分布:   ";
+    for (const auto& type : categories) {
+        text += QString("%1 ×%2 (待收 ¥%3)      ")
+            .arg(QString::fromStdString(type))
+            .arg(feeByType.getCategoryCount(type))
+            .arg(feeByType.getTotal(type), 0, 'f', 2);
+    }
+    typeDistLabel->setText(text);
 }
 
 void StatisticsPanel::updateOverview() {

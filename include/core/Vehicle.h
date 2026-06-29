@@ -3,8 +3,6 @@
 #include <string>
 #include <chrono>
 
-class ParkingSpot;
-
 class Vehicle {
 protected:
     std::string plateNumber;
@@ -18,7 +16,6 @@ public:
     
     virtual double getHourlyRate() const = 0;
     virtual std::string getType() const = 0;
-    virtual bool canFitInSpot(const ParkingSpot& spot) const = 0;
     
     void setEntryTime(std::chrono::system_clock::time_point time);
     
@@ -33,7 +30,6 @@ public:
     Car(const std::string& plate);
     double getHourlyRate() const override;
     std::string getType() const override;
-    bool canFitInSpot(const ParkingSpot& spot) const override;
 };
 
 class Truck : public Vehicle {
@@ -41,7 +37,6 @@ public:
     Truck(const std::string& plate);
     double getHourlyRate() const override;
     std::string getType() const override;
-    bool canFitInSpot(const ParkingSpot& spot) const override;
 };
 
 class Motorcycle : public Vehicle {
@@ -49,5 +44,4 @@ public:
     Motorcycle(const std::string& plate);
     double getHourlyRate() const override;
     std::string getType() const override;
-    bool canFitInSpot(const ParkingSpot& spot) const override;
 };

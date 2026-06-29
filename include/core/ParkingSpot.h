@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <string>
 #include <chrono>
@@ -44,6 +44,8 @@ public:
     std::string getSpotCode() const;
     int getSpotId() const;
     std::string getZone() const;
+    int getRow() const;
+    int getPosition() const;
     SpotStatus getStatus() const;
     std::string getPlate() const;
     

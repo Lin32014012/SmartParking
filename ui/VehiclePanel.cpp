@@ -153,7 +153,7 @@ void VehiclePanel::showBillDialog(const QString& plate) {
         .arg(bill.amount, 0, 'f', 2));
 
     QPushButton* payBtn = dialog.addButton("确认支付", QMessageBox::AcceptRole);
-    QPushButton* cancelBtn = dialog.addButton("取消", QMessageBox::RejectRole);
+    dialog.addButton("取消", QMessageBox::RejectRole);
     dialog.exec();
 
     if (dialog.clickedButton() == payBtn) {
@@ -192,7 +192,7 @@ void VehiclePanel::onSearch() {
         double duration = vehicle->calculateParkingDuration();
         vehicleTable->setItem(0, 3, new QTableWidgetItem(QString::number(duration, 'f', 1) + " h"));
 
-        double fee = vehicle->calculateFee();
+        double fee = billingManager.calculateFee(*vehicle);
         vehicleTable->setItem(0, 4, new QTableWidgetItem(QString::number(fee, 'f', 2) + " 元"));
     }
 }
@@ -214,7 +214,7 @@ void VehiclePanel::refreshTable() {
         double duration = v.calculateParkingDuration();
         vehicleTable->setItem(row, 3, new QTableWidgetItem(QString::number(duration, 'f', 1) + " h"));
 
-        double fee = v.calculateFee();
+        double fee = billingManager.calculateFee(v);
         vehicleTable->setItem(row, 4, new QTableWidgetItem(QString::number(fee, 'f', 2) + " 元"));
     });
 }

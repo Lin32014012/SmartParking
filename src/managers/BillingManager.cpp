@@ -1,14 +1,45 @@
 ﻿#include "managers/BillingManager.h"
+#include "utils/RatePolicy.h"
 #include <iostream>
 #include <iomanip>
 #include <chrono>
 #include <ctime>
 #include <sstream>
 
+namespace {
+    // 判断当前结算时刻是否处于夜间时段（22:00-06:00），夜间轿车享受折扣
+    bool isNightTime() {
+        auto now = std::chrono::system_clock::now();
+        std::time_t t = std::chrono::system_clock::to_time_t(now);
+        std::tm local{};
+#ifdef _WIN32
+        localtime_s(&local, &t);
+#else
+        localtime_r(&t, &local);
+#endif
+        return local.tm_hour >= 22 || local.tm_hour < 6;
+    }
+}
+
 BillingManager::BillingManager() {}
 
 double BillingManager::calculateFee(const Vehicle& vehicle) {
-    return vehicle.calculateFee();
+    double hours = vehicle.calculateParkingDuration();
+
+    // 按车型分派到对应的计费策略（RatePolicy 模板特化）：
+    //   轿车   —— 夜间 3 元/小时，日间 5 元/小时
+    //   卡车   —— 不足 1 小时按 1 小时计，10 元/小时
+    //   摩托车 —— 2.5 元/小时
+    if (dynamic_cast<const Car*>(&vehicle)) {
+        return RatePolicy<Car>::calculateFee(hours, isNightTime());
+    }
+    if (dynamic_cast<const Truck*>(&vehicle)) {
+        return RatePolicy<Truck>::calculateFee(hours);
+    }
+    if (dynamic_cast<const Motorcycle*>(&vehicle)) {
+        return RatePolicy<Motorcycle>::calculateFee(hours);
+    }
+    return vehicle.calculateFee();  // 兜底：未知车型按基础费率
 }
 
 BillRecord BillingManager::generateBill(const Vehicle& vehicle) {

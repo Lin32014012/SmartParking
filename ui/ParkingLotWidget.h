@@ -40,7 +40,6 @@ protected:
 private:
     void drawSpot(QPainter& painter, const SpotVisual& spot);
     void drawLegend(QPainter& painter);
-    void drawZoneLabel(QPainter& painter, const QString& zone, int y);
     void showContextMenu(const QPoint& pos, const SpotVisual& spot);
     void recalculateLayout();
 
